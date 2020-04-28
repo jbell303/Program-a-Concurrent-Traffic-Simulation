@@ -41,8 +41,8 @@ class TrafficLight : TrafficObject
 {
 public:
     // constructor / desctructor
-    TrafficLight(): _msgQueue(new MessageQueue<TrafficLightPhase>) {};
-    ~TrafficLight() {};
+    TrafficLight();
+    ~TrafficLight();
 
     // getters / setters
     TrafficLightPhase getCurrentPhase();
