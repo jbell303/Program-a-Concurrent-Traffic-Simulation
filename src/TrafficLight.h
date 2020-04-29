@@ -62,6 +62,7 @@ private:
     void cycleThroughPhases();
     TrafficLightPhase _currentPhase;
     std::shared_ptr<MessageQueue<TrafficLightPhase>> _msgQueue;
+    double generateRandomCycle();
 };
 
 #endif

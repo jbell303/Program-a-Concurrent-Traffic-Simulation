@@ -67,6 +67,10 @@ void TrafficLight::simulate()
     threads.emplace_back(std::thread(&TrafficLight::cycleThroughPhases, this));
 }
 
+double TrafficLight::generateRandomCycle() {
+    return rand() % 2000 + 4000; // range 4 to 6 secs
+}
+
 // virtual function which is executed in a thread
 void TrafficLight::cycleThroughPhases()
 {
@@ -75,10 +79,10 @@ void TrafficLight::cycleThroughPhases()
     // to the message queue using move semantics. The cycle duration should be a random value between 4 and 6 seconds. 
     // Also, the while-loop should use std::this_thread::sleep_for to wait 1ms between two cycles. 
     auto startTime = std::chrono::steady_clock::now();
-    auto cycleTime = rand() % 2 + 4; // range 4 to 6
+    auto cycleTime = generateRandomCycle();
     while (true) {
         auto currentTime = std::chrono::steady_clock::now();
-        if (std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count() > cycleTime) {
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count() > cycleTime) {
             // toggle light current phase
             if (_currentPhase == TrafficLightPhase::red) {
                 _currentPhase = TrafficLightPhase::green;
@@ -87,9 +91,10 @@ void TrafficLight::cycleThroughPhases()
             }
 
             // send current phase to the queue
-            threads.emplace_back(std::thread(&MessageQueue<TrafficLightPhase>::send, _msgQueue, std::move(_currentPhase)));
-            cycleTime = rand() % 2 + 4; // generate a new cycle time
-            startTime = currentTime;
+            //threads.emplace_back(std::thread(&MessageQueue<TrafficLightPhase>::send, _msgQueue, std::move(_currentPhase)));
+            _msgQueue->send(std::move(_currentPhase));
+            cycleTime = generateRandomCycle();
+            startTime = std::chrono::steady_clock::now();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // wait 1ms between cycles
     }
