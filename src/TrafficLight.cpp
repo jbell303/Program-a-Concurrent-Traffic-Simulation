@@ -88,6 +88,7 @@ void TrafficLight::cycleThroughPhases()
 
             // send current phase to the queue
             threads.emplace_back(std::thread(&MessageQueue<TrafficLightPhase>::send, _msgQueue, std::move(_currentPhase)));
+            cycleTime = rand() % 2 + 4; // generate a new cycle time
             startTime = currentTime;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // wait 1ms between cycles
