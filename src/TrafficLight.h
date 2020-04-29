@@ -37,12 +37,11 @@ std::deque<T> _queue;
 // can be either „red“ or „green“. Also, add the private method „void cycleThroughPhases()“. 
 // Furthermore, there shall be the private member _currentPhase which can take „red“ or „green“ as its value. 
 
-class TrafficLight : TrafficObject
+class TrafficLight : public TrafficObject
 {
 public:
     // constructor / desctructor
     TrafficLight();
-    ~TrafficLight();
 
     // getters / setters
     TrafficLightPhase getCurrentPhase();
